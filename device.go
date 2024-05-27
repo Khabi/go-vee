@@ -14,7 +14,8 @@ const (
 
 // Device stores info about detected devices.
 type Device struct {
-	IPAddr   net.IPAddr
+	IPAddr   net.IP
+	MAC      net.HardwareAddr
 	LastSeen time.Time
 	Spec     Spec
 }

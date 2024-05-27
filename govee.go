@@ -20,6 +20,17 @@ func Run(ctx context.Context) {
 	lsner := NewListener()
 	g.Go(func() error { return lsner.Run(ctx) })
 
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case d := <-lsner.Result:
+				fmt.Println(d)
+			}
+		}
+	}()
+
 	if err := g.Wait(); err != nil {
 		fmt.Println(err.Error())
 	}
