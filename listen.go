@@ -2,8 +2,9 @@ package govee
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
 	"net"
+	"time"
 )
 
 type Listener struct {
@@ -31,17 +32,35 @@ func (l Listener) Run(ctx context.Context) error {
 
 	conn.SetReadBuffer(8192)
 
-	for {
-		select {
-		case <-ctx.Done():
-			return nil
-		default:
-			buffer := make([]byte, 8192)
-			_, _, err := conn.ReadFromUDP(buffer)
-			if err != nil {
-				return err
-			}
-			fmt.Println(string(buffer))
+	go func() {
+		buffer := make([]byte, 8192)
+		n, _, err := conn.ReadFromUDP(buffer)
+		if err != nil {
+			return
 		}
-	}
+
+		var data scanRespose
+		err = json.Unmarshal(buffer[:n], &data)
+		if err != nil {
+			return
+		}
+
+		ip := net.ParseIP(data.Msg.Data.IP)
+		hw, err := net.ParseMAC(data.Msg.Data.Device)
+		if err != nil {
+			return
+		}
+		device := Device{
+			IPAddr:   ip,
+			MAC:      hw,
+			LastSeen: time.Now(),
+			Spec:     LookupBySKU(data.Msg.Data.Sku),
+		}
+
+		l.Result <- device
+	}()
+
+	<-ctx.Done()
+	return nil
+
 }
