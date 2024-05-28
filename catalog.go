@@ -33,8 +33,8 @@ var catalog = []Spec{
 	{FloorLamps, "H607C", "Govee RGBICWW Floor Lamp 2", "https://app-mall.govee.com/product-detail?sku=H607C111"},
 	{LandscapeLighting, "H7050", "Smart Ground Lights", ""},
 	{LandscapeLighting, "H7051", "Smart Ground Lights", "https://app-mall.govee.com/product-detail?sku=H7051111"},
-	{LandscapeLighting, "H7052", "15m Outdoor Ground Lights", ""},
-	{LandscapeLighting, "H7053", "30m Outdoor Ground Lights", ""},
+	{LandscapeLighting, "H7052", "15m Outdoor Ground Lights", "https://app-mall.govee.com/product-detail?sku=H7052111"},
+	{LandscapeLighting, "H7053", "30m Outdoor Ground Lights", "https://app-mall.govee.com/product-detail?sku=H7053111"},
 	{LandscapeLighting, "H7055", "Govee RGBIC Path Lights", "https://app-mall.govee.com/product-detail?sku=H7055111"},
 	{LandscapeLighting, "H705A", "30m Permanent Outdoor Lights", "https://app-mall.govee.com/product-detail?sku=H705A1D1"},
 	{LandscapeLighting, "H705B", "15m Permanent Outdoor Lights", "https://app-mall.govee.com/product-detail?sku=H705B1D1"},
@@ -45,7 +45,7 @@ var catalog = []Spec{
 	{LandscapeLighting, "H7060", "Govee RGBIC Flood lights", "https://app-mall.govee.com/product-detail?sku=H7060112"},
 	{LandscapeLighting, "H7061", "2 Pack RGBIC Flood Lights", ""},
 	{LandscapeLighting, "H7062", "6 Pack RGBIC Flood Lights", "https://app-mall.govee.com/product-detail?sku=H7062111"},
-	{LandscapeLighting, "H7063", "Govee Outdoor Flood Light", ""},
+	{LandscapeLighting, "H7063", "Govee Outdoor Flood Light", "https://app-mall.govee.com/product-detail?sku=H7063111"},
 	{LandscapeLighting, "H7065", "Govee RGBIC Spotlights", ""},
 	{LandscapeLighting, "H7066", "Govee RGBIC Spotlights", "https://app-mall.govee.com/product-detail?sku=H7066111"},
 	{LandscapeLighting, "H706A", "30m Permanent Outdoor Lights Pro", "https://app-mall.govee.com/product-detail?sku=H706A101"},
@@ -143,26 +143,29 @@ var catalog = []Spec{
 
 // LookupBySKU searches the catalog for a device
 // matching the given SKU.
-func LookupBySKU(sku string) Spec {
+func LookupBySKU(sku string) *Spec {
 	for _, device := range catalog {
 		if device.SKU == sku {
-			return device
+			return &device
 		}
 	}
 
-	return Spec{}
+	return nil
 }
 
 // LookupByKind searches the catalog and returns
 // all the devices matching it.
-func LookupByKind(kind Kind) []Spec {
-	data := []Spec{}
+func LookupByKind(kind Kind) []*Spec {
+	data := []*Spec{}
 
 	for _, device := range catalog {
 		if device.Kind == kind {
-			data = append(data, device)
+			data = append(data, &device)
 		}
 	}
 
-	return data
+	if len(data) > 0 {
+		return data
+	}
+	return nil
 }
