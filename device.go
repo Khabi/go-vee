@@ -17,7 +17,7 @@ type Device struct {
 	IPAddr   net.IP
 	MAC      net.HardwareAddr
 	LastSeen time.Time
-	Spec     Spec
+	Spec     *Spec
 }
 
 // Status is the current status of the device.

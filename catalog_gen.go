@@ -110,27 +110,30 @@ var catalog = []Spec{
 
 // LookupBySKU searches the catalog for a device
 // matching the given SKU.
-func LookupBySKU(sku string) Spec {
+func LookupBySKU(sku string) *Spec {
 	for _, device := range catalog{
 		if device.SKU == sku {
-			return device
+			return &device
 		}
 	}
 
-	return Spec{}
+	return nil
 }
 
 // LookupByKind searches the catalog and returns
 // all the devices matching it.
-func LookupByKind(kind Kind) []Spec {
-	data := []Spec{}
+func LookupByKind(kind Kind) []*Spec {
+	data := []*Spec{}
 
 	for _, device := range catalog {
 		if device.Kind == kind {
-			data = append(data, device)
+			data = append(data, &device)
 		}
 	}
 
-	return data
+	if len(data) > 0 {
+		return data
+	}
+	return nil
 }
 `
