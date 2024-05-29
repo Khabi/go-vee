@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-go@v5
-    - uses: dominikh/staticcheck-action@v1.2.0
+    - uses: dominikh/staticcheck-action@v1.3.1
     - uses: arduino/setup-task@v1
 
     - name: Run Tests
